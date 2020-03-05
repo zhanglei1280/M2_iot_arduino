@@ -1,6 +1,8 @@
 #include "dht.h"
+
 #define SensorPin 0;
 #define dht_apin A2
+
 dht DHT;
 unsigned long int avgValue;
 unsigned long int avgValuePH;
@@ -9,13 +11,8 @@ int buf[10], temp, bufPH[10];
 int motorPin = 6;
 int lumpPin = 8;
 
-
-
-
-
 void setup() 
 {
-  // put your setup code here, to run once:
   pinMode(13,OUTPUT);
   pinMode(motorPin,OUTPUT);
   pinMode(lumpPin,OUTPUT);
@@ -25,40 +22,31 @@ void setup()
 
 void loop() 
 {
-  
-  
   if ( Serial.available() > 0 )
   {
-    char c = Serial.read();
-    if (c == 'a')
+    char command = Serial.read();
+    if (command == 'a')
     {
-      Serial.println("arroser");
+      Serial.println("arrosage");
       digitalWrite(motorPin, HIGH);
-      
     }
-    if (c == 's')
+    if (command == 's')
     {
-      Serial.println("stop arroser");
+      Serial.println("arrosage arrêté");
       digitalWrite(motorPin, LOW);
-
-      
     }
-    if (c == 'e')
+    if (command == 'e')
     {
       digitalWrite(lumpPin, HIGH);
-      Serial.println("eclairer");
-      
+      Serial.println("éclairage");
     }
-    if (c == 't')
+    if (command == 't')
     {
       digitalWrite(lumpPin, LOW);
-      Serial.println("stop eclairer");
-      
+      Serial.println("éclairage arrêté");
     }
   }
   
-  
-  // put your main code here, to run repeatedly:
   for(int i = 0; i < 10; i++)
   {
     buf[i] = analogRead(A1);
@@ -107,7 +95,7 @@ void loop()
   Serial.print("LightOne: ");
   Serial.println(avgValue);
 
-  Serial.print("PH: ");
+  Serial.print("PHThree: ");
   Serial.println(ph);
 
   Serial.print("Humidity: ");
@@ -115,15 +103,13 @@ void loop()
   Serial.print("Temperature: ");
   Serial.println(DHT.temperature); 
 
-  Serial.print("Water: ");
+  Serial.print("WaterOne: ");
   Serial.println(-water + 1024); 
 
   Serial.print("WaterTwo: ");
   Serial.println(water2);
     
-  
   digitalWrite(13,HIGH);
   delay(3000);
-  digitalWrite(13,LOW);
-  
+  digitalWrite(13,LOW); 
 }
