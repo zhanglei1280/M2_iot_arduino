@@ -91,17 +91,18 @@ void loop()
   int water = analogRead(A3);
 
   int water2 = analogRead(A4);
+
+  Serial.print("Humidity: ");
+  Serial.println(DHT.humidity);
+
+  Serial.print("Temperature: ");
+  Serial.println(DHT.temperature); 
   
   Serial.print("LightOne: ");
   Serial.println(avgValue);
 
   Serial.print("PHThree: ");
   Serial.println(ph);
-
-  Serial.print("Humidity: ");
-  Serial.println(DHT.humidity);
-  Serial.print("Temperature: ");
-  Serial.println(DHT.temperature); 
 
   Serial.print("WaterOne: ");
   Serial.println(-water + 1024); 
