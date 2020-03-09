@@ -1,25 +1,46 @@
+#include <Wire.h>
+#include <Digital_Light_TSL2561.h>
 #include "dht.h"
+
 #define SensorPin 0;
 #define dht_apin A2
 dht DHT;
-unsigned long int avgValue;
+
+int temp, bufPH[10];
+
+int WaterOnePin = A0;
+int WaterTwoPin = A3;
+
+int WaterOneValue = 0;
+int WaterTwoValue = 0;
+
+int PHPin = A1;
 unsigned long int avgValuePH;
-float b;
-int buf[10], temp, bufPH[10];
-int motorPin = 6;
-int lumpPin = 8;
 
+int lumpPin1 = 8;
+int lumpPin2 = 9;
+int lumpPin3 = 10;
 
-
-
+int motorPin1 = 5;
+int motorPin2 = 6;
+int motorPin3 = 7;
 
 void setup() 
 {
-  // put your setup code here, to run once:
-  pinMode(13,OUTPUT);
-  pinMode(motorPin,OUTPUT);
-  pinMode(lumpPin,OUTPUT);
+  Wire.begin();
+  TSL2561.init();
   Serial.begin(9600);
+  
+  pinMode(lumpPin1,OUTPUT);
+  pinMode(lumpPin2,OUTPUT);
+  pinMode(lumpPin3,OUTPUT);
+  
+  pinMode(motorPin1,OUTPUT);
+  pinMode(motorPin2,OUTPUT);
+  pinMode(motorPin3,OUTPUT);
+  
+  pinMode(13,OUTPUT);
+  
   Serial.println("hello");
 }
 
@@ -32,37 +53,77 @@ void loop()
     char c = Serial.read();
     if (c == 'a')
     {
-      Serial.println("arroser");
-      digitalWrite(motorPin, HIGH);
+      Serial.println("arroser1");
+      digitalWrite(motorPin1, HIGH);
+    }
+
+    if (c == 'b')
+    {
+      Serial.println("arroser2");
+      digitalWrite(motorPin2, HIGH);
       
     }
-    if (c == 's')
+
+    if (c == 'c')
+    {
+      Serial.println("arroser3");
+      digitalWrite(motorPin3, HIGH);
+    }
+    
+    if (c == 'd')
     {
       Serial.println("stop arroser");
-      digitalWrite(motorPin, LOW);
-
-      
+      digitalWrite(motorPin1, LOW);
+      digitalWrite(motorPin2, LOW);
+      digitalWrite(motorPin3, LOW);
     }
+    
     if (c == 'e')
     {
-      digitalWrite(lumpPin, HIGH);
-      Serial.println("eclairer");
-      
+      digitalWrite(lumpPin1, HIGH);
+      Serial.println("eclairer1");
     }
-    if (c == 't')
+
+    if (c == 'f')
     {
-      digitalWrite(lumpPin, LOW);
+      digitalWrite(lumpPin2, HIGH);
+      Serial.println("eclairer2");
+    }
+
+    if (c == 'g')
+    {
+      digitalWrite(lumpPin3, HIGH);
+      Serial.println("eclairer3");
+    }
+
+    if (c == 'h')
+    {
+      digitalWrite(lumpPin1, HIGH);
+      digitalWrite(lumpPin2, HIGH);
+      digitalWrite(lumpPin3, HIGH);
+      Serial.println("eclairer all");
+    }
+    
+    if (c == 'i')
+    {
+      digitalWrite(lumpPin1, LOW);
+      digitalWrite(lumpPin2, LOW);
+      digitalWrite(lumpPin3, LOW);
       Serial.println("stop eclairer");
-      
+    }
+
+    if (c == 'j')
+    {
+      Serial.println("arroser all");
+      digitalWrite(motorPin1, HIGH);
+      digitalWrite(motorPin2, HIGH);
+      digitalWrite(motorPin3, HIGH);
     }
   }
   
-  
-  // put your main code here, to run repeatedly:
   for(int i = 0; i < 10; i++)
   {
-    buf[i] = analogRead(A1);
-    bufPH[i] = analogRead(0);
+    bufPH[i] = analogRead(PHPin);
     delay(10);
   }
 
@@ -70,13 +131,6 @@ void loop()
   {
     for(int j = i + 1; j < 10; j++)
     {
-      if(buf[i] > buf[j])
-      {
-        temp = buf[i];
-        buf[i] = buf[j];
-        buf[j] = temp;
-      }
-
       if(bufPH[i] > bufPH[j])
       {
         temp = bufPH[i];
@@ -86,44 +140,36 @@ void loop()
     }
   }
 
-  avgValue = 0;
   avgValuePH = 0;
   for(int i = 2; i < 8; i++)
   {
-    avgValue += buf[i];
     avgValuePH += bufPH[i];
   }
 
-  avgValue = avgValue/10;
   float ph = (float) avgValuePH * 5.0/1024/6;
   ph = 3.5 * ph;
 
-  DHT.read11(dht_apin);
-
-  int water = analogRead(A3);
-
-  int water2 = analogRead(A4);
+  Serial.print("LightOneValue: ");
+  Serial.println(TSL2561.readVisibleLux());
   
-  Serial.print("LightOne: ");
-  Serial.println(avgValue);
+  WaterOneValue = analogRead(WaterOnePin);
+  Serial.print("WaterOneValue: ");
+  Serial.println(WaterOneValue); 
 
-  Serial.print("PH: ");
+  WaterTwoValue = analogRead(WaterTwoPin);
+  Serial.print("WaterTwoValue: ");
+  Serial.println(WaterTwoValue); 
+
+  Serial.print("PHThree: ");
   Serial.println(ph);
 
+  DHT.read11(dht_apin);  
   Serial.print("Humidity: ");
   Serial.println(DHT.humidity);
   Serial.print("Temperature: ");
   Serial.println(DHT.temperature); 
 
-  Serial.print("Water: ");
-  Serial.println(-water + 1024); 
-
-  Serial.print("WaterTwo: ");
-  Serial.println(water2);
-    
-  
   digitalWrite(13,HIGH);
-  delay(3000);
+  delay(2000);
   digitalWrite(13,LOW);
-  
 }
