@@ -50,27 +50,27 @@ void loop()
   
   if ( Serial.available() > 0 )
   {
-    char c = Serial.read();
-    if (c == 'a')
+    char commande = Serial.read();
+    if (commande == 'a')
     {
       Serial.println("arroser1");
       digitalWrite(motorPin1, HIGH);
     }
 
-    if (c == 'b')
+    if (commande == 'b')
     {
       Serial.println("arroser2");
       digitalWrite(motorPin2, HIGH);
       
     }
 
-    if (c == 'c')
+    if (commande == 'c')
     {
       Serial.println("arroser3");
       digitalWrite(motorPin3, HIGH);
     }
     
-    if (c == 'd')
+    if (commande == 'd')
     {
       Serial.println("stop arroser");
       digitalWrite(motorPin1, LOW);
@@ -78,25 +78,25 @@ void loop()
       digitalWrite(motorPin3, LOW);
     }
     
-    if (c == 'e')
+    if (commande == 'e')
     {
       digitalWrite(lumpPin1, HIGH);
       Serial.println("eclairer1");
     }
 
-    if (c == 'f')
+    if (commande == 'f')
     {
       digitalWrite(lumpPin2, HIGH);
       Serial.println("eclairer2");
     }
 
-    if (c == 'g')
+    if (commande == 'g')
     {
       digitalWrite(lumpPin3, HIGH);
       Serial.println("eclairer3");
     }
 
-    if (c == 'h')
+    if (commande == 'h')
     {
       digitalWrite(lumpPin1, HIGH);
       digitalWrite(lumpPin2, HIGH);
@@ -104,7 +104,7 @@ void loop()
       Serial.println("eclairer all");
     }
     
-    if (c == 'i')
+    if (commande == 'i')
     {
       digitalWrite(lumpPin1, LOW);
       digitalWrite(lumpPin2, LOW);
@@ -112,7 +112,7 @@ void loop()
       Serial.println("stop eclairer");
     }
 
-    if (c == 'j')
+    if (commande == 'j')
     {
       Serial.println("arroser all");
       digitalWrite(motorPin1, HIGH);
@@ -158,7 +158,7 @@ void loop()
 
   WaterTwoValue = analogRead(WaterTwoPin);
   Serial.print("WaterTwoValue: ");
-  Serial.println(WaterTwoValue); 
+  Serial.println(1024 - WaterTwoValue); 
 
   Serial.print("PHThree: ");
   Serial.println(ph);
